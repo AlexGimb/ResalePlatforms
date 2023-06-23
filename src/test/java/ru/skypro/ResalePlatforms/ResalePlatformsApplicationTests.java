@@ -1,10 +1,10 @@
-package ru.skypro.homework;
+package ru.skypro.ResalePlatforms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class HomeworkApplicationTests {
+class ResalePlatformsApplicationTests {
 
     @Test
     void contextLoads() {

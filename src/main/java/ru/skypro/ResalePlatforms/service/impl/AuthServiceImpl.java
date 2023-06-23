@@ -1,13 +1,13 @@
-package ru.skypro.homework.service.impl;
+package ru.skypro.ResalePlatforms.service.impl;
 
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.RegisterReq;
-import ru.skypro.homework.dto.Role;
-import ru.skypro.homework.service.AuthService;
+import ru.skypro.ResalePlatforms.dto.RegisterReq;
+import ru.skypro.ResalePlatforms.dto.Role;
+import ru.skypro.ResalePlatforms.service.AuthService;
 
 @Service
 public class AuthServiceImpl implements AuthService {
