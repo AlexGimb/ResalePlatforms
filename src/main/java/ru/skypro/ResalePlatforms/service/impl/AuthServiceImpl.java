@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import ru.skypro.ResalePlatforms.dto.RegisterReq;
+import ru.skypro.ResalePlatforms.dto.RegisterDTO;
 import ru.skypro.ResalePlatforms.dto.Role;
 import ru.skypro.ResalePlatforms.service.AuthService;
 
@@ -31,15 +31,15 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public boolean register(RegisterReq registerReq, Role role) {
-    if (manager.userExists(registerReq.getUsername())) {
+  public boolean register(RegisterDTO registerDTO, Role role) {
+    if (manager.userExists(registerDTO.getUsername())) {
       return false;
     }
     manager.createUser(
         User.builder()
             .passwordEncoder(this.encoder::encode)
-            .password(registerReq.getPassword())
-            .username(registerReq.getUsername())
+            .password(registerDTO.getPassword())
+            .username(registerDTO.getUsername())
             .roles(role.name())
             .build());
     return true;

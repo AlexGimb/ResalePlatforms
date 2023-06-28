@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     UserDetails user =
         User.builder()
             .username("user@gmail.com")
-            .password("password")
+              .password("password")
             .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
             .roles("USER")
             .build();
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
 //                    .mvcMatchers("/ads/**", "/users/**")
 //                    .authenticated())
         .cors()
-        .disable()
+        .and()
         .httpBasic(withDefaults());
     return http.build();
   }

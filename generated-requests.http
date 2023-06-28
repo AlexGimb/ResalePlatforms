@@ -2,19 +2,19 @@
 ###
 GET http://localhost:8080/get
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 ###
-GET http://localhost:8080/ads/asddsfsdf/comment
+GET http://localhost:8080/ads/asddsfsdf/commentDTO
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 ###
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-   "username": "user@gmail.com",
+   "username": "userDTO@gmail.com",
    "password": "password",
    "firstName":  " asdad",
    "lastName": " asdad",
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/register
+POST http://localhost:8080/registerDTO
 Content-Type: application/json
 
 {
@@ -33,51 +33,51 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/ads/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 ###
 GET http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 ###
 PATCH http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 {
   "phone": "33333",
   "lastName": "Ivanov",
   "firstName": "Ivan",
-  "email": "user",
+  "email": "userDTO",
   "id": 1
 }
 
 ###
 GET http://localhost:8080/users/1
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 ###
 GET http://localhost:8080/ads
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 
 ###
 POST http://localhost:8080/users/set_password
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 {
-  "newPassword": "password",
+  "newPasswordDTO": "password",
   "currentPassword": "password1"
 }
 
 ###
 POST http://localhost:8080/ads
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 {
   "image": "123",
@@ -90,7 +90,7 @@ Authorization: Basic user@gmail.com password
 ###
 GET http://localhost:8080/ads
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userDTO@gmail.com password
 
 
 
