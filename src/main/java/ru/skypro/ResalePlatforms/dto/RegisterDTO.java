@@ -1,28 +1,21 @@
 package ru.skypro.ResalePlatforms.dto;
 
-import java.util.Objects;
+import lombok.Data;
 
-public class User {
+@Data
+public class RegisterDTO {
+    //логин
     private String username;
+    //пароль
     private String password;
+    //имя пользователя
     private String firstName;
+    //фамилия пользователя
     private String lastName;
+    //телефон пользователя
     private String phone;
+    //роль пользователя
     private Role role;
-
-    public User(String username, String password,
-                String firstName, String lastName,
-                String phone, Role role) {
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phone = phone;
-        this.role = role;
-    }
-
-    public User() {
-    }
 
     public String getUsername() {
         return username;
@@ -70,18 +63,5 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(username, user.username) && Objects.equals(password, user.password) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && role == user.role;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username, password, firstName, lastName, phone, role);
     }
 }
