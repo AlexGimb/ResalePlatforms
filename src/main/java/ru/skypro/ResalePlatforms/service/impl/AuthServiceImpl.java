@@ -1,5 +1,6 @@
 package ru.skypro.ResalePlatforms.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,6 +17,7 @@ public class AuthServiceImpl implements AuthService {
 
   private final PasswordEncoder encoder;
 
+  @Autowired
   public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder passwordEncoder) {
     this.manager = manager;
     this.encoder = passwordEncoder;
