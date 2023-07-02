@@ -1,4 +1,91 @@
 package ru.skypro.ResalePlatforms.service.impl;
 
-public class UserServiceImpl {
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+import ru.skypro.ResalePlatforms.dto.NewPasswordDTO;
+import ru.skypro.ResalePlatforms.dto.UpdateUserDTO;
+import ru.skypro.ResalePlatforms.entity.UserClient;
+import ru.skypro.ResalePlatforms.repository.UserRepository;
+import ru.skypro.ResalePlatforms.service.ImageService;
+import ru.skypro.ResalePlatforms.service.UserService;
+
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl implements UserService {
+    private final UserRepository userRepository;
+    private final ImageService imageService;
+
+
+    public UserServiceImpl(UserRepository userRepository, ImageService imageService) {
+        this.userRepository = userRepository;
+        this.imageService = imageService;
+    }
+
+    /**
+     * Устанавливает новый пароль для пользователя.
+     *
+     * @param newPassword объект NewPassword с данными нового пароля
+     * @return
+     */
+    public NewPasswordDTO setPassword(NewPasswordDTO newPassword) {
+        UserClient authenticatedUserClient = getAuthenticatedUser();
+        authenticatedUserClient.setPassword(newPassword.getNewPassword());
+        UserClient updatedUserClient = userRepository.save(authenticatedUserClient);
+        NewPasswordDTO response = new NewPasswordDTO();
+        response.setNewPassword(updatedUserClient.getPassword());
+        return response;
+    }
+
+    /**
+     * Возвращает информацию о текущем аутентифицированном пользователе.
+     *
+     * @return объект User с информацией о пользователе
+     */
+    public UserClient getAuthenticatedUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        Optional<UserClient> optionalUserClient = userRepository.findByUsername(email);
+        if (optionalUserClient.isPresent()) {
+            return optionalUserClient.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+        }
+    }
+
+    /**
+     * Обновляет информацию о текущем пользователе.
+     *
+     * @param updateUser объект UpdateUser с обновленными данными пользователя
+     * @return объект UpdateUser с обновленными данными пользователя
+     */
+    public UpdateUserDTO updateUser(UpdateUserDTO updateUser) {
+        UserClient authenticatedUserClient = getAuthenticatedUser();
+        authenticatedUserClient.setFirstName(updateUser.getFirstName());
+        authenticatedUserClient.setLastName(updateUser.getLastName());
+        authenticatedUserClient.setPhone(updateUser.getPhone());
+        // Дополнительные поля для обновления информации о пользователе
+        UserClient updatedUserClient = userRepository.save(authenticatedUserClient);
+        UpdateUserDTO response = new UpdateUserDTO();
+        response.setFirstName(updatedUserClient.getFirstName());
+        response.setLastName(updatedUserClient.getLastName());
+        response.setPhone(updatedUserClient.getPhone());
+        return response;
+    }
+
+    /**
+     * Обновляет изображение пользователя.
+     *
+     * @param image файл изображения для обновления
+     */
+    public void updateUserImage(MultipartFile image) {
+        UserClient authenticatedUserClient = getAuthenticatedUser();
+        String imageUrl = imageService.uploadImage(image); // Загружаем изображение на сервер или в облачное хранилище и получаем URL
+        authenticatedUserClient.setImage(imageUrl);
+        userRepository.save(authenticatedUserClient);
+    }
 }
