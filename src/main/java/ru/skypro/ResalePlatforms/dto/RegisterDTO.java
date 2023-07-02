@@ -1,8 +1,5 @@
 package ru.skypro.ResalePlatforms.dto;
 
-import lombok.Data;
-
-@Data
 public class RegisterDTO {
     //логин
     private String username;

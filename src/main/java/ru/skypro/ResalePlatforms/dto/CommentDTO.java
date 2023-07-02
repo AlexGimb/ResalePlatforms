@@ -50,10 +50,6 @@ public class CommentDTO {
         return pk;
     }
 
-    public void setPk(int pk) {
-        this.pk = pk;
-    }
-
     public String getText() {
         return text;
     }

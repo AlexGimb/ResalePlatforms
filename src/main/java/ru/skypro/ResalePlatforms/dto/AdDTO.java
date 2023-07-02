@@ -16,10 +16,6 @@ public class AdDTO {
         return author;
     }
 
-    public void setAuthor(int author) {
-        this.author = author;
-    }
-
     public String getImage() {
         return image;
     }
