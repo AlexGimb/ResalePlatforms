@@ -1,6 +1,8 @@
 package ru.skypro.ResalePlatforms.dto;
 
 
+import ru.skypro.ResalePlatforms.entity.Ad;
+
 import java.util.List;
 
 
@@ -8,7 +10,7 @@ public class AdsDTO {
     //общее количество объявлений
     private int count;
     //лист всех объявления
-    private List<AdDTO> results;
+    private List<Ad> results;
 
     public int getCount() {
         return count;
@@ -18,11 +20,11 @@ public class AdsDTO {
         this.count = count;
     }
 
-    public List<AdDTO> getResults() {
+    public List<Ad> getResults() {
         return results;
     }
 
-    public void setResults(List<AdDTO> results) {
+    public void setResults(List<Ad> results) {
         this.results = results;
     }
 }

@@ -20,6 +20,10 @@ public class ExtendedAdDTO {
     //заголовок объявления
     private String title;
 
+    public void setPk(int pk) {
+        this.pk = pk;
+    }
+
     public int getPk() {
         return pk;
     }

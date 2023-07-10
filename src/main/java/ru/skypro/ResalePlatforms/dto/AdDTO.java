@@ -1,8 +1,10 @@
 package ru.skypro.ResalePlatforms.dto;
 
+import ru.skypro.ResalePlatforms.entity.UserClient;
+
 public class AdDTO {
     //id автора объявления
-    private int author;
+    private UserClient author;
     //ссылка на картинку объявления
     private String image;
     //id объявления
@@ -12,7 +14,21 @@ public class AdDTO {
     //заголовок объявления
     private String title;
 
-    public int getAuthor() {
+    private String description;
+
+    public void setAuthor(UserClient author) {
+        this.author = author;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public UserClient getAuthor() {
         return author;
     }
 

@@ -1,55 +1,74 @@
 package ru.skypro.ResalePlatforms.controller;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.ResalePlatforms.dto.*;
+import ru.skypro.ResalePlatforms.dto.AdDTO;
+import ru.skypro.ResalePlatforms.dto.AdsDTO;
+import ru.skypro.ResalePlatforms.dto.CreateOrUpdateAdDTO;
+import ru.skypro.ResalePlatforms.dto.ExtendedAdDTO;
+import ru.skypro.ResalePlatforms.service.AdService;
+import ru.skypro.ResalePlatforms.service.ImageService;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")
-public class AdController {
+public class  AdController {
 
-    // Получить все объявления
-    @GetMapping("/")
+    private final AdService adService;
+    private final ImageService imageService;
+
+    public AdController(AdService adService, ImageService imageService) {
+        this.adService = adService;
+        this.imageService = imageService;
+    }
+
+
+    @GetMapping
     public ResponseEntity<AdsDTO> getAllAds() {
-        // Заглушка для значения по умолчанию
-        AdsDTO response = new AdsDTO();
-        return ResponseEntity.ok(response);
+        // Логика получения всех объявлений
+        AdsDTO ads = adService.getAllAds();
+        return ResponseEntity.ok(ads);
     }
 
-    // Добавить объявление
-    @PostMapping("/")
-    public ResponseEntity<AdDTO> addAd(@RequestParam("image") MultipartFile image, @RequestParam("createOrUpdateAdDTO") CreateOrUpdateAdDTO createOrUpdateAdDTO) {
-        // Заглушка для значения по умолчанию
-        AdDTO adDTO = new AdDTO();
-        return ResponseEntity.ok(adDTO);
+    @PostMapping
+    public ResponseEntity<AdDTO> addAd(@RequestPart("image") MultipartFile image, @RequestPart("properties") CreateOrUpdateAdDTO ad) {
+        // Логика добавления объявления
+        AdDTO createdAd = adService.addAd(image, ad);
+        return ResponseEntity.ok(createdAd);
     }
-    // Получить комментарии объявления
 
     @GetMapping("/{id}")
     public ResponseEntity<ExtendedAdDTO> getAd(@PathVariable("id") int id) {
         // Логика получения информации об объявлении по его идентификатору
-        ExtendedAdDTO ad = new ExtendedAdDTO();
-        return ResponseEntity.ok(ad);
+        ExtendedAdDTO extendedAd = adService.getAdById(id);
+        return ResponseEntity.ok(extendedAd);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeAd(@PathVariable("id") int id) {
         // Логика удаления объявления
+        adService.removeAd(id);
         return ResponseEntity.noContent().build();
     }
+
     @PatchMapping("/{id}")
     public ResponseEntity<AdDTO> updateAd(@PathVariable("id") int id, @RequestBody CreateOrUpdateAdDTO ad) {
         // Логика обновления информации об объявлении
-        AdDTO ads = new AdDTO();
-        return ResponseEntity.ok(ads);
+        AdDTO updatedAd = adService.updateAd(id, ad);
+        return ResponseEntity.ok(updatedAd);
     }
+
     @PatchMapping("/{adId}/image")
-    public ResponseEntity<byte[]> updateAdImage(@PathVariable("adId") int adId, @RequestParam("image") MultipartFile image) {
-        // Логика обновления картинки объявления
-//        byte[] imageData = adService.updateAdImage(adId, image);
-//        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM).body(imageData);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<byte[]> updateAdImage(@PathVariable("adId") int adId, @RequestPart("image") MultipartFile image) {
+        byte[] updatedImage = adService.updateAdImage(adId, image);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_JPEG);
+        return new ResponseEntity<>(updatedImage, headers, HttpStatus.OK);
     }
 }
+

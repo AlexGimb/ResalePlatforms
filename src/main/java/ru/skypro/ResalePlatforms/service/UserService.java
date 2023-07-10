@@ -13,6 +13,5 @@ public interface UserService {
     UpdateUserDTO updateUser(UpdateUserDTO updateUser);
 
     void updateUserImage(MultipartFile image);
-
 }
 

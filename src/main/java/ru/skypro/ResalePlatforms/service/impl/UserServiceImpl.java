@@ -12,7 +12,6 @@ import ru.skypro.ResalePlatforms.entity.UserClient;
 import ru.skypro.ResalePlatforms.repository.UserRepository;
 import ru.skypro.ResalePlatforms.service.ImageService;
 import ru.skypro.ResalePlatforms.service.UserService;
-
 import java.util.Optional;
 
 @Service
@@ -27,25 +26,11 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * Устанавливает новый пароль для пользователя.
-     *
-     * @param newPassword объект NewPassword с данными нового пароля
-     * @return
-     */
-    public NewPasswordDTO setPassword(NewPasswordDTO newPassword) {
-        UserClient authenticatedUserClient = getAuthenticatedUser();
-        authenticatedUserClient.setPassword(newPassword.getNewPassword());
-        UserClient updatedUserClient = userRepository.save(authenticatedUserClient);
-        NewPasswordDTO response = new NewPasswordDTO();
-        response.setNewPassword(updatedUserClient.getPassword());
-        return response;
-    }
-
-    /**
      * Возвращает информацию о текущем аутентифицированном пользователе.
      *
      * @return объект User с информацией о пользователе
      */
+    @Override
     public UserClient getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
@@ -63,6 +48,7 @@ public class UserServiceImpl implements UserService {
      * @param updateUser объект UpdateUser с обновленными данными пользователя
      * @return объект UpdateUser с обновленными данными пользователя
      */
+    @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUser) {
         UserClient authenticatedUserClient = getAuthenticatedUser();
         authenticatedUserClient.setFirstName(updateUser.getFirstName());
@@ -78,13 +64,31 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * Устанавливает новый пароль для пользователя.
+     *
+     * @param newPassword объект NewPassword с данными нового пароля
+     * @return
+     */
+    @Override
+    public NewPasswordDTO setPassword(NewPasswordDTO newPassword) {
+        UserClient authenticatedUserClient = getAuthenticatedUser();
+        authenticatedUserClient.setPassword(newPassword.getNewPassword());
+        UserClient updatedUserClient = userRepository.save(authenticatedUserClient);
+        UpdateUserDTO response = new UpdateUserDTO();
+        response.setPassword(updatedUserClient.getPassword());
+        return new NewPasswordDTO();
+    }
+
+    /**
      * Обновляет изображение пользователя.
      *
      * @param image файл изображения для обновления
      */
+    @Override
     public void updateUserImage(MultipartFile image) {
         UserClient authenticatedUserClient = getAuthenticatedUser();
-        String imageUrl = imageService.uploadImage(image); // Загружаем изображение на сервер или в облачное хранилище и получаем URL
+        // Загружаем изображение на сервер или в облачное хранилище и получаем URL
+        String imageUrl = imageService.uploadImage(image);
         authenticatedUserClient.setImage(imageUrl);
         userRepository.save(authenticatedUserClient);
     }

@@ -1,12 +1,14 @@
 package ru.skypro.ResalePlatforms.dto;
 
+import ru.skypro.ResalePlatforms.entity.Comment;
+
 import java.util.List;
 
 public class CommentsDTO {
     //общее количество комментариев
     private int count;
     //лист всех комментарии
-    private List<CommentDTO> results;
+    private List<Comment> results;
 
     public int getCount() {
         return count;
@@ -16,11 +18,11 @@ public class CommentsDTO {
         this.count = count;
     }
 
-    public List<CommentDTO> getResults() {
+    public List<Comment> getResults() {
         return results;
     }
 
-    public void setResults(List<CommentDTO> results) {
+    public void setResults(List<Comment> results) {
         this.results = results;
     }
 }
