@@ -1,8 +1,10 @@
 package ru.skypro.ResalePlatforms.dto;
 
+import ru.skypro.ResalePlatforms.entity.UserClient;
+
 public class CommentDTO {
     //id автора комментария
-    private int author;
+    private UserClient author;
     //ссылка на аватар автора комментария
     private String authorImage;
     //имя создателя комментария
@@ -14,11 +16,11 @@ public class CommentDTO {
     //текст комментария
     private String text;
 
-    public int getAuthor() {
+    public UserClient getAuthor() {
         return author;
     }
 
-    public void setAuthor(int author) {
+    public void setAuthor(UserClient author) {
         this.author = author;
     }
 
@@ -44,6 +46,10 @@ public class CommentDTO {
 
     public void setCreateAt(long createAt) {
         this.createAt = createAt;
+    }
+
+    public void setPk(int pk) {
+        this.pk = pk;
     }
 
     public int getPk() {

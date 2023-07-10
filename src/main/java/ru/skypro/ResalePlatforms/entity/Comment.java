@@ -1,17 +1,20 @@
 package ru.skypro.ResalePlatforms.entity;
 
+import ru.skypro.ResalePlatforms.dto.CommentDTO;
+
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "comments")
-public class Comment {
+public class Comment extends CommentDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int adId;
 
-    @Column(nullable = false)
-    private int author;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UserClient author;
 
     @Column(nullable = false)
     private String authorImage;
@@ -25,10 +28,10 @@ public class Comment {
     @Column(nullable = false)
     private String text;
 
-    public Comment(int id, int author,
+    public Comment(int adId, UserClient author,
                    String authorImage, String authorFirstName,
                    long createdAt, String text) {
-        this.id = id;
+        this.adId = adId;
         this.author = author;
         this.authorImage = authorImage;
         this.authorFirstName = authorFirstName;
@@ -40,16 +43,16 @@ public class Comment {
 
     }
 
-    public int getId() {
-        return id;
+    public int getAdId() {
+        return adId;
     }
 
 
-    public int getAuthor() {
+    public UserClient getAuthor() {
         return author;
     }
 
-    public void setAuthor(int author) {
+    public void setAuthor(UserClient author) {
         this.author = author;
     }
 
@@ -90,11 +93,11 @@ public class Comment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Comment comment = (Comment) o;
-        return id == comment.id && author == comment.author && createdAt == comment.createdAt && Objects.equals(authorImage, comment.authorImage) && Objects.equals(authorFirstName, comment.authorFirstName) && Objects.equals(text, comment.text);
+        return adId == comment.adId && createdAt == comment.createdAt && Objects.equals(author, comment.author) && Objects.equals(authorImage, comment.authorImage) && Objects.equals(authorFirstName, comment.authorFirstName) && Objects.equals(text, comment.text);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, author, authorImage, authorFirstName, createdAt, text);
+        return Objects.hash(adId, author, authorImage, authorFirstName, createdAt, text);
     }
 }

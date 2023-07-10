@@ -1,19 +1,21 @@
 package ru.skypro.ResalePlatforms.entity;
 
+import ru.skypro.ResalePlatforms.dto.AdDTO;
+
 import javax.persistence.*;
-import java.util.Objects;
 
 @Entity
 @Table(name = "ads")
-public class Ad {
+public class Ad extends AdDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private int author;
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UserClient author;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String image;
 
     @Column(nullable = false)
@@ -22,10 +24,10 @@ public class Ad {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column()
     private String description;
 
-    public Ad(int id, int author,
+    public Ad(int id, UserClient author,
               String image, int price,
               String title, String description) {
         this.id = id;
@@ -44,34 +46,45 @@ public class Ad {
         return id;
     }
 
-    public int getAuthor() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public UserClient getAuthor() {
         return author;
     }
 
-    public void setAuthor(int author) {
+    public void setAuthor(UserClient author) {
         this.author = author;
     }
 
+    @Override
     public String getImage() {
         return image;
     }
 
+    @Override
     public void setImage(String image) {
         this.image = image;
     }
 
+    @Override
     public int getPrice() {
         return price;
     }
 
+    @Override
     public void setPrice(int price) {
         this.price = price;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
@@ -82,18 +95,5 @@ public class Ad {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Ad ad = (Ad) o;
-        return id == ad.id && author == ad.author && price == ad.price && Objects.equals(image, ad.image) && Objects.equals(title, ad.title) && Objects.equals(description, ad.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, author, image, price, title, description);
     }
 }

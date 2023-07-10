@@ -1,36 +1,37 @@
 package ru.skypro.ResalePlatforms.entity;
 
 import ru.skypro.ResalePlatforms.dto.Role;
+import ru.skypro.ResalePlatforms.dto.UserDTO;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class UserClient {
+public class UserClient extends UserDTO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String username;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(100)")
     private String password;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String firstName;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(50)")
     private String lastName;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private String phone;
 
     @Column(nullable = true, columnDefinition = "VARCHAR(255)")
     private String image;
 
-    @Column(nullable = false, columnDefinition = "VARCHAR(255)")
+    @Column(nullable = false, columnDefinition = "VARCHAR(20)")
     private Role role;
 
     public UserClient(int id, String username, String password, String firstName,
@@ -66,9 +67,8 @@ public class UserClient {
         return password;
     }
 
-    public String setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
-        return password;
     }
 
 

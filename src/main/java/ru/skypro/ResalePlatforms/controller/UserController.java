@@ -8,6 +8,8 @@ import ru.skypro.ResalePlatforms.dto.UpdateUserDTO;
 import ru.skypro.ResalePlatforms.entity.UserClient;
 import ru.skypro.ResalePlatforms.service.UserService;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(value = "http://localhost:3000")
@@ -42,9 +44,8 @@ public class UserController {
 
     // Обновить аватар авторизованного пользователя
     @PatchMapping("/me/image")
-    public ResponseEntity<String> updateUserImage(@RequestParam("image") MultipartFile image) {
-        // Заглушка для значения по умолчанию
+    public ResponseEntity<String> updateUserImage(@RequestParam("image") MultipartFile image) throws IOException {
         userService.updateUserImage(image);
-        return ResponseEntity.ok("User image updated");
+        return ResponseEntity.ok("Аватар успешно изменен");
     }
 }
