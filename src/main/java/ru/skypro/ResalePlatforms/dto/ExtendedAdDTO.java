@@ -10,7 +10,7 @@ public class ExtendedAdDTO {
     //описание объявления
     private String description;
     //логин автора объявления
-    private String email;
+    private String username;
     //ссылка на картинку объявления
     private String image;
     //телефон автора объявления
@@ -20,13 +20,14 @@ public class ExtendedAdDTO {
     //заголовок объявления
     private String title;
 
+    public void setPk(int pk) {
+        this.pk = pk;
+    }
+
     public int getPk() {
         return pk;
     }
 
-    public void setPk(int pk) {
-        this.pk = pk;
-    }
 
     public String getAuthorFirstName() {
         return authorFirstName;
@@ -52,12 +53,12 @@ public class ExtendedAdDTO {
         this.description = description;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getImage() {

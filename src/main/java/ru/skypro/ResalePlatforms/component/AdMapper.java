@@ -1,4 +1,4 @@
-package ru.skypro.ResalePlatforms.service;
+package ru.skypro.ResalePlatforms.component;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
