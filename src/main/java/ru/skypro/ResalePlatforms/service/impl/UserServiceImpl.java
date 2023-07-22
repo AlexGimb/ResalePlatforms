@@ -3,19 +3,24 @@ package ru.skypro.ResalePlatforms.service.impl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.ResalePlatforms.dto.NewPasswordDTO;
 import ru.skypro.ResalePlatforms.dto.UpdateUserDTO;
+import ru.skypro.ResalePlatforms.dto.UserDetailsDTO;
 import ru.skypro.ResalePlatforms.entity.UserClient;
+import ru.skypro.ResalePlatforms.entity.UserPrincipal;
 import ru.skypro.ResalePlatforms.repository.UserRepository;
 import ru.skypro.ResalePlatforms.service.ImageService;
 import ru.skypro.ResalePlatforms.service.UserService;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final ImageService imageService;
 
@@ -91,5 +96,15 @@ public class UserServiceImpl implements UserService {
         String imageUrl = imageService.uploadImage(image);
         authenticatedUserClient.setImage(imageUrl);
         userRepository.save(authenticatedUserClient);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserClient userClient = userRepository.findByUsername(username).orElseThrow();
+        UserDetailsDTO userDetailsDTO = new UserDetailsDTO(userClient.getUsername(),userClient.getPassword(),userClient.getId(),userClient.getRole());
+        return new UserPrincipal(userDetailsDTO);
+    }
+    public boolean userExists(String username){
+        return userRepository.findByUsername(username).isPresent();
     }
 }
