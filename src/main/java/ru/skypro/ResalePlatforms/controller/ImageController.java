@@ -1,11 +1,17 @@
 package ru.skypro.ResalePlatforms.controller;
 
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.ResalePlatforms.exception.ImageUploadException;
 import ru.skypro.ResalePlatforms.service.ImageService;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/images")
@@ -17,12 +23,17 @@ public class ImageController {
         this.imageService = imageService;
     }
 
-    @GetMapping("/{fileName:.+}")
-    public ResponseEntity<Resource> getImage(@PathVariable("fileName") String fileName) {
+    @GetMapping("/{fileName}")
+    public ResponseEntity<byte[]> getImage(@PathVariable("fileName") String fileName) {
         Resource imageResource = imageService.loadImageResource(fileName);
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // Измените MediaType в зависимости от типа сохраняемых изображений
-                .body(imageResource);
+        try {
+            byte[] imageBytes = FileCopyUtils.copyToByteArray(imageResource.getInputStream());
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+        } catch (IOException e) {
+            throw new ImageUploadException("Error reading image", e);
+        }
     }
 
     @PostMapping

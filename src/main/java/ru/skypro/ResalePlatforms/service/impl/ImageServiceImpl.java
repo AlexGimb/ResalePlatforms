@@ -18,9 +18,9 @@ import java.util.UUID;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-    private static final String UPLOAD_DIR = "upload-directory";
+    private static final String UPLOAD_DIR = "upload.directory";
 
-    private static final String BASE_URL = "http://localhost:8080/api/images";
+    private static final String BASE_URL = "/api/images/";
 
     @Override
     public String uploadImage(MultipartFile image) {
@@ -29,7 +29,8 @@ public class ImageServiceImpl implements ImageService {
             String filePath = getUploadDirectory() + File.separator + fileName;
             File destFile = new File(filePath);
             image.transferTo(destFile);
-            String imageUrl = BASE_URL + "/images/" + fileName; // Формирование URL-адреса изображения
+            String imageUrl = BASE_URL + fileName; // Формирование URL-адреса изображения
+            System.out.println("Image URL: " + imageUrl);
             return imageUrl;
         } catch (IOException e) {
             throw new ImageUploadException("Failed to upload image", e);

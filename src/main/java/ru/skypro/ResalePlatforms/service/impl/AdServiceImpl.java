@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import ru.skypro.ResalePlatforms.dto.AdDTO;
 import ru.skypro.ResalePlatforms.dto.AdsDTO;
 import ru.skypro.ResalePlatforms.dto.CreateOrUpdateAdDTO;
 import ru.skypro.ResalePlatforms.dto.ExtendedAdDTO;
@@ -54,10 +55,10 @@ public class AdServiceImpl implements AdService {
      * @return объект Ad с информацией о добавленном объявлении
      */
     @Override
-    public Ad addAd(MultipartFile image, CreateOrUpdateAdDTO ad) {
-        // Загружаем изображение на сервер или в облачное хранилище и получаем URL
+    public AdDTO addAd(MultipartFile image, CreateOrUpdateAdDTO ad) {
         String imageUrl = imageService.uploadImage(image);
         UserClient userClient = userService.getAuthenticatedUser();
+
         Ad newAd = new Ad();
         newAd.setAuthor(userClient);
         newAd.setTitle(ad.getTitle());
@@ -67,7 +68,14 @@ public class AdServiceImpl implements AdService {
 
         Ad createdAd = adRepository.save(newAd);
 
-        return createdAd;
+        AdDTO adDTO = new AdDTO();
+        adDTO.setPk(createdAd.getId());
+        adDTO.setTitle(createdAd.getTitle());
+        adDTO.setDescription(createdAd.getDescription());
+        adDTO.setPrice(createdAd.getPrice());
+        adDTO.setImage(createdAd.getImage());
+
+        return adDTO;
     }
 
     /**
@@ -108,16 +116,24 @@ public class AdServiceImpl implements AdService {
      * @throws ResponseStatusException если объявление не найдено
      */
     @Override
-    public Ad updateAd(int id, CreateOrUpdateAdDTO ad) {
+    public AdDTO updateAd(int id, CreateOrUpdateAdDTO ad) {
         Ad existingAd = adRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Объявление не найдено found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Объявление не найдено"));
 
         existingAd.setTitle(ad.getTitle());
         existingAd.setDescription(ad.getDescription());
         existingAd.setPrice(ad.getPrice());
 
         Ad updatedAd = adRepository.save(existingAd);
-        return updatedAd;
+
+        AdDTO adDTO = new AdDTO();
+        adDTO.setPk(updatedAd.getId());
+        adDTO.setTitle(updatedAd.getTitle());
+        adDTO.setDescription(updatedAd.getDescription());
+        adDTO.setPrice(updatedAd.getPrice());
+        adDTO.setImage(updatedAd.getImage());
+
+        return adDTO;
     }
 
     /**

@@ -1,72 +1,67 @@
 package ru.skypro.ResalePlatforms;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.CacheControl;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.skypro.ResalePlatforms.dto.Role;
+import ru.skypro.ResalePlatforms.repository.UserRepository;
+import ru.skypro.ResalePlatforms.service.impl.CustomUserDetailsService;
 
+import javax.persistence.Cacheable;
 import javax.sql.DataSource;
-import java.util.concurrent.TimeUnit;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig implements WebMvcConfigurer {
-
+@Cacheable
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private static final String[] AUTH_WHITELIST = {
           "/swagger-resources/**",
           "/swagger-ui.html",
           "/v3/api-docs",
           "/webjars/**",
           "/login",
-          "/register"
+          "/register",
+          "/api/images/**"
   };
 
   private final DataSource dataSource;
+  private final UserDetailsService userDetailsService;
 
-  public WebSecurityConfig(DataSource dataSource) {
+  public WebSecurityConfig(DataSource dataSource, UserDetailsService userDetailsService) {
     this.dataSource = dataSource;
+    this.userDetailsService = userDetailsService;
   }
 
-  @Bean
-  public InMemoryUserDetailsManager userDetailsService(PasswordEncoder passwordEncoder) {
-    UserDetails user =
-            User.builder()
-                    .username("user@gmail.com")
-                    .password("password")
-                    .passwordEncoder(passwordEncoder::encode)
-                    .roles(Role.USER.name())
-                    .build();
-    return new InMemoryUserDetailsManager(user);
+  @Override
+  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    auth.userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder());
   }
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf()
-            .disable()
-            .authorizeHttpRequests(
-                    authorization ->
-                            authorization
-                                    .mvcMatchers(AUTH_WHITELIST)
-                                    .permitAll()
-                                    .mvcMatchers("/ads/**", "/users/**")
-                                    .authenticated())
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf().disable()
+            .authorizeRequests()
+            .antMatchers(AUTH_WHITELIST).permitAll()
+            .antMatchers("/ads/**", "/users/**").authenticated()
+            .antMatchers("/register").permitAll()
+            .and()
+            .httpBasic()
+            .and()
             .cors()
             .and()
-            .httpBasic(withDefaults());
-    return http.build();
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+  }
+
+  @Bean
+  public UserDetailsService userDetailsService(UserRepository userRepository) {
+    return new CustomUserDetailsService(userRepository);
   }
 
   @Bean
@@ -74,13 +69,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     return new BCryptPasswordEncoder();
   }
 
-  // путь к upload-directory в файле application.properties или application.yml
-  @Value("${upload.directory}")
-  private String uploadDirectory;
-
-  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/images/**")
-            .addResourceLocations("file:" + uploadDirectory + "/")
-            .setCacheControl(CacheControl.maxAge(365, TimeUnit.DAYS));
+  public DataSource getDataSource() {
+    return dataSource;
   }
 }

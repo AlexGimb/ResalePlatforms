@@ -43,6 +43,10 @@ public class Comment extends CommentDTO {
 
     }
 
+    public void setAdId(int adId) {
+        this.adId = adId;
+    }
+
     public int getAdId() {
         return adId;
     }

@@ -3,6 +3,7 @@ package ru.skypro.ResalePlatforms.service.impl;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,10 +13,13 @@ import ru.skypro.ResalePlatforms.entity.UserClient;
 import ru.skypro.ResalePlatforms.repository.UserRepository;
 import ru.skypro.ResalePlatforms.service.ImageService;
 import ru.skypro.ResalePlatforms.service.UserService;
+
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+
     private final UserRepository userRepository;
     private final ImageService imageService;
 
@@ -33,7 +37,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserClient getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
         Optional<UserClient> optionalUserClient = userRepository.findByUsername(email);
         if (optionalUserClient.isPresent()) {
             return optionalUserClient.get();
