@@ -32,6 +32,7 @@ public class AuthController {
         }
     }
 
+
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
         Role role = registerDTO.getRole() == null ? Role.USER : registerDTO.getRole();

@@ -18,5 +18,4 @@ public class UserAdController {
         AdsDTO ads = new AdsDTO();
         return ResponseEntity.ok(ads);
     }
-
 }

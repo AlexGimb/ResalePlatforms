@@ -5,7 +5,7 @@ Content-Type: application/json
 Authorization: Basic userDTO@gmail.com password
 
 ###
-GET http://localhost:8080/ads/asddsfsdf/commentDTO
+GET http://localhost:8080/ads/commentDTO
 Content-Type: application/json
 Authorization: Basic userDTO@gmail.com password
 

@@ -53,7 +53,7 @@ public class CommentServiceImpl implements CommentService {
         UserClient authenticatedUser = userService.getAuthenticatedUser();
 
         Comment newComment = new Comment();
-        newComment.setPk(adId);
+        newComment.setAdId(adId);
         newComment.setAuthor(authenticatedUser);
         newComment.setText(comment.getText());
 
